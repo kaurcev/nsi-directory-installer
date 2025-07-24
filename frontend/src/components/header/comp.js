@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom';
 import './style.css';
 import { useAppContext } from '../../Application';
 const Header = () => {
-    const {name} = useAppContext();
+    const { logo } = useAppContext();
     return (
         <>
             <header>
                 <div className="header">
-                    <div className="logo">
-                        <Link to="/">{name}</Link>
-                    </div>
+                    <Link to="/">
+                        <img src={logo} className='logo' alt='Логотип' />
+                        <span>Монтёр нормативно-справочной информации</span>
+                    </Link>
                 </div>
             </header>
         </>

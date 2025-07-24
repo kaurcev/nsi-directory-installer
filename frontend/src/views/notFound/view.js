@@ -12,8 +12,8 @@ export default function E404View(){
     return (
         <>
         <Header />
-            <main>
-                <h1>404</h1>
+            <main className="centered">
+                <h1 className="big">404</h1>
                 <p>Данная страница удалена или не существовала вовсе.</p>
                 <Link to="/">На главную</Link>
             </main>

@@ -1,7 +1,8 @@
 {
   "name": "frontend",
+  "org": "Медицинский информационно-аналитический центр",
   "version": "0.1.0",
-  "versionstate":"template",
+  "versionstate": "alfa",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
