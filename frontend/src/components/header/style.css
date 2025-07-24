@@ -19,6 +19,7 @@ header .header {
     display: flex;
     align-items: center;
     flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
 }
 header .header a{
@@ -30,4 +31,11 @@ header .header a{
 }
 header .header .logo{
     max-height: 40px;
+}
+header .header span{
+    opacity: 0.8;
+}
+
+header .header span:hover{
+    opacity: 1;
 }

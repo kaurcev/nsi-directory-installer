@@ -1,24 +1,34 @@
 @font-face {
-  font-family: "Golos-Text_Regular";
-  src: local("Golos-Text_Regular"),
-    local("Golos-Text_Regular"),
-    url("./fonts/Golos-Text_Regular.woff2") format("woff2");
-  font-weight: normal;
+    font-family: "Golos-Text_Regular";
+    src: local("Golos-Text_Regular"),
+        local("Golos-Text_Regular"),
+        url("./fonts/Golos-Text_Regular.woff2") format("woff2");
+    font-weight: normal;
 }
 
-*{
+@keyframes fadeIn {
+    0%{
+        opacity: 0.2;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+* {
     box-sizing: border-box;
     font-family: "Golos-Text_Regular", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
+    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, opacity 0.1s ease-in-out;
 }
 
 :root {
     --akcent: #3A529B;
     --akcent-two: #4b69c4;
     --akcent-disabled: #556491;
-	--bg :#f2f4f8;
-    --bg-pan :#fff;
+    --bg: #f2f4f8;
+    --bg-pan: #fff;
     --sdw: 0 4px 10px 0 #3A529B20;
 }
 
@@ -37,6 +47,10 @@ main {
     margin: 0 auto;
 }
 
+main *{
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
 a {
     text-decoration: none;
 }
@@ -47,23 +61,61 @@ a {
     margin: 2px 0px;
 }
 
-.clm{
+.clm {
     display: flex;
     flex-direction: column;
 }
-.row.ctr{
+
+.row.ctr {
     align-items: center;
 }
-.clm.ctr{
+
+.clm.ctr {
     justify-content: center;
 }
-.big{
+
+.big {
     font-size: 5.0rem;
     color: var(--akcent);
 }
-.centered{
+
+.centered {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.nomarg{
+    margin: 0px;
+}
+
+.btw{
+    justify-content: space-between;
+}
+
+input{
+    background-color: var(--bg);
+    padding: 6px 8px;
+    border: 2px solid var(--bg);
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+button{
+    background-color: var(--akcent);
+    padding: 6px 8px;
+    border: 2px solid var(--akcent);
+    color: var(--bg-pan);
+    border-radius: 4px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
 }

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './style.css';
 import { useAppContext } from '../../Application';
 const Header = () => {
-    const { logo } = useAppContext();
+    const { logo, navigate } = useAppContext();
     return (
         <>
             <header>
@@ -11,6 +11,9 @@ const Header = () => {
                         <img src={logo} className='logo' alt='Логотип' />
                         <span>Монтёр нормативно-справочной информации</span>
                     </Link>
+                    <div>
+                        <span onClick={()=>navigate("/signin")}>Авторизация</span>
+                    </div>
                 </div>
             </header>
         </>
