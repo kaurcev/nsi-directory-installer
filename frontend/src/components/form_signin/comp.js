@@ -21,6 +21,7 @@ const SignInForm = () => {
                     <input placeholder='Введите пароль' />
                 </div>
                 <button>
+                    <i className="fa fa-sign-in" aria-hidden="true"></i>
                     <span>Авторизироваться</span>
                 </button>
                 <p className='mini right'>{version} ({versionstate})</p>

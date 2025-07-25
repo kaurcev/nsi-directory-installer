@@ -10,7 +10,6 @@ header {
     align-items: center;
     flex-direction: row;
     box-shadow: var(--sdw);
-    z-index: 1000;
 }
 
 header .header {

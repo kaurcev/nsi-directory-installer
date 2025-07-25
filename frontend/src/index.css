@@ -46,6 +46,9 @@ main {
     width: 100%;
     max-width: 1900px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 main *{
@@ -67,7 +70,7 @@ a {
 
 .mini {
     font-size: 0.8rem;
-    opacity: 0.5;
+    color: #8d8d8d;
     margin: 2px 0px;
 }
 
@@ -83,6 +86,23 @@ a {
 
 .gap{
     gap: 10px;
+}
+
+.grid{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.grid .panel{
+    flex-basis: 400px;
+    flex-grow: 1;
+    min-height: 10vh;
+    display: flex;
+    justify-content: space-between;
 }
 
 .row.ctr {
@@ -107,6 +127,12 @@ a {
 
 .right {
     text-align: right;
+}
+
+.rightf{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
 }
 
 .nomarg{

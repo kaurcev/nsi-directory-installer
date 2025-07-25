@@ -6,7 +6,7 @@ import { useAppContext } from "../../Application";
 export default function ProfileView() {
     const { setTitle, navigate } = useAppContext();
     useEffect(() => {
-        setTitle("Страница профиля")
+        setTitle("Профиль пользователя")
     }, [setTitle])
     return (
         <>
@@ -14,27 +14,28 @@ export default function ProfileView() {
             <main>
                 <div className="row btw ctr">
                     <div className="row ctr gap">
-                        <button onClick={()=>navigate(-1)}>
-                            Назад
+                        <button onClick={() => navigate(-1)}>
+                            <i className="fa fa-chevron-left" aria-hidden="true"></i> <span>Назад</span>
                         </button>
-                        <h2>Учётная запись</h2>
+                        <h2>Профиль пользователя</h2>
                     </div>
                     <div className="row gap">
                         <button>
-                            Редактировать
+                            <i className="fa fa-pencil" aria-hidden="true"></i>
+                            <span>Редактировать профиль</span>
                         </button>
                         <button className="red">
-                            Выйти из учётной записи
+                            <i className="fa fa-sign-out" aria-hidden="true"></i> <span>Завершение сеанса</span>
                         </button>
                     </div>
                 </div>
                 <div className="panel">
-                    <p className="nomarg mini">Фамилия Имя Отчество</p>
+                    <p className="nomarg mini">ФИО</p>
                     <p>Иванов Иван Иванович</p>
-                    <p className="nomarg mini">Роль</p>
-                    <p>Администратор</p>
-                    <p className="nomarg mini">Описание возможностей</p>
-                    <p>Управление репликацией нормативно-справочной информации</p>
+                    <p className="nomarg mini">Должность</p>
+                    <p>Администратор системы</p>
+                    <p className="nomarg mini">Функциональные полномочия</p>
+                    <p>Управление процессами репликации нормативно-справочной информации</p>
                 </div>
             </main>
             <Footer />
