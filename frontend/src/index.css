@@ -30,6 +30,7 @@
     --bg: #f2f4f8;
     --bg-pan: #fff;
     --sdw: 0 4px 10px 0 #3A529B20;
+    --red: crimson;
 }
 
 html,
@@ -55,6 +56,15 @@ a {
     text-decoration: none;
 }
 
+
+.panel{
+    background-color: var(--bg-pan);
+    padding: 10px;
+    box-shadow: var(--sdw);
+    border-radius: 4px;
+    gap: 10px;
+}
+
 .mini {
     font-size: 0.8rem;
     opacity: 0.5;
@@ -64,6 +74,15 @@ a {
 .clm {
     display: flex;
     flex-direction: column;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+.gap{
+    gap: 10px;
 }
 
 .row.ctr {
@@ -118,4 +137,9 @@ button{
     justify-content: center;
     gap: 10px;
     font-size: 0.9rem;
+}
+
+button.red{
+    background-color: var(--red);
+    border: 2px solid var(--red);
 }

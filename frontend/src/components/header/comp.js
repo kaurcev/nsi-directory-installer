@@ -7,12 +7,19 @@ const Header = () => {
         <>
             <header>
                 <div className="header">
-                    <Link to="/">
-                        <img src={logo} className='logo' alt='Логотип' />
-                        <span>Монтёр нормативно-справочной информации</span>
-                    </Link>
-                    <div>
-                        <span onClick={()=>navigate("/signin")}>Авторизация</span>
+                    <div className='row ctr gap'>
+                        <Link className='row ctr gap' to="/">
+                            <img src={logo} className='logo' alt='Логотип' />
+                            <span>Платформа репликации НСИ</span>
+                        </Link>
+                        <Link target="_blank" to="https://nsi.rosminzdrav.ru/dictionaries">Реестр справочников</Link>
+                        <Link target="_blank" to="https://nsi.rosminzdrav.ru/oid">Реестр OID</Link>
+                    </div>
+                    <div className='row gap'>
+                        <span onClick={() => navigate("/signin")}>Авторизация</span>
+                        <span onClick={() => navigate("/")}>Настройки</span>
+                        <span onClick={() => navigate("/")}>Управление</span>
+                        <span onClick={() => navigate("/profile")}>Иванов И.И.</span>
                     </div>
                 </div>
             </header>

@@ -22,20 +22,22 @@ header .header {
     justify-content: space-between;
     gap: 10px;
 }
-header .header a{
+
+header .header a,
+header .header span {
     color: var(--bg-pan);
     display: flex;
     align-items: center;
     flex-direction: row;
     gap: 10px;
-}
-header .header .logo{
-    max-height: 40px;
-}
-header .header span{
-    opacity: 0.8;
+    color: #ffffff80;
 }
 
-header .header span:hover{
-    opacity: 1;
+header .header .logo {
+    max-height: 40px;
+}
+
+header .header span:hover,
+header .header a:hover {
+   color: #ffffff;
 }
