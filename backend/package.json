@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon server.js ",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "https": "^1.0.0",
+    "morgan": "^1.10.1",
+    "rotating-file-stream": "^3.2.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
