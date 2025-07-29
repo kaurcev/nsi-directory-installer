@@ -81,6 +81,7 @@ router.get('/search', createNsiHandler({
   fixedParams: { size: 10 },
   message: 'Результаты поиска',
   transformResponse: (data) => ({
+    total: data.total,
     data: data.list.map(item => ({
       id: item.nsiDictionaryId,
       oid: item.oid,
