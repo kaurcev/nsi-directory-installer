@@ -7,15 +7,15 @@ const DEFAULT_TIMEOUT = 30000;
 
 const cleanHtmlContent = (html) => {
   if (!html) return null;
-  
+
   return html
     .replace(/(<br\s*\/?>|<\/div>|<\/li>)/gi, '\n')
     .replace(/<\/p>|<\/h\d>/gi, '\n\n')
     .replace(/<[^>]+>/g, '')
-    .replace(/&(nbsp|amp|lt|gt|quot|apos);/g, (_, entity) => 
+    .replace(/&(nbsp|amp|lt|gt|quot|apos);/g, (_, entity) =>
       ({ nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }[entity])
     )
-    .replace(/\r\n|\n{3,}|[ \t]{2,}/g, (match) => 
+    .replace(/\r\n|\n{3,}|[ \t]{2,}/g, (match) =>
       match.includes('\n') ? '\n\n' : ' '
     )
     .trim();
@@ -23,7 +23,7 @@ const cleanHtmlContent = (html) => {
 
 const createNsiHandler = (config) => async (req, res) => {
   try {
-    const { 
+    const {
       endpoint,
       allowedParams = [],
       fixedParams = {},
@@ -49,8 +49,8 @@ const createNsiHandler = (config) => async (req, res) => {
 
     const responseData = transformResponse(response.data, req);
     const statusCode = response.status || 200;
-    const responseMessage = typeof message === 'function' 
-      ? message(req) 
+    const responseMessage = typeof message === 'function'
+      ? message(req)
       : message;
 
     res.status(statusCode).json({
@@ -62,7 +62,7 @@ const createNsiHandler = (config) => async (req, res) => {
   } catch (error) {
     const status = error.response?.status || 500;
     const errorMessage = error.response?.data?.message || error.message;
-    
+
     res.status(status).json({
       status: false,
       message: errorMessage,
@@ -136,13 +136,13 @@ router.get('/passport', createNsiHandler({
 router.get('/data', createNsiHandler({
   endpoint: '/data',
   allowedParams: [
-    'identifier', 'version', 'page', 'size', 
+    'identifier', 'version', 'page', 'size',
     'columns', 'sorting', 'sortingDirection', 'filters'
   ],
   message: (req) => `Содержимое справочника ${req.query.identifier}`,
   transformResponse: (data) => ({
     total: data.total,
-    data: data.list 
+    data: data.list
   })
 }));
 
