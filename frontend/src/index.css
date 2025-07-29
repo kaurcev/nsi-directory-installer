@@ -143,7 +143,7 @@ a {
     justify-content: space-between;
 }
 
-input{
+input, select, textarea{
     background-color: var(--bg);
     padding: 6px 8px;
     border: 2px solid var(--bg);
@@ -168,4 +168,26 @@ button{
 button.red{
     background-color: var(--red);
     border: 2px solid var(--red);
+}
+
+.end{
+    display: flex;
+    justify-content: end;
+}
+
+.searchbox div.clm{
+    flex-grow: 1;
+    flex-basis: 300px;
+}
+.searchbox div.clm input, .searchbox div.clm textarea{
+    width: 100%;
+}
+.searchbox div.clm textarea{    
+    resize: none;
+}
+.searchbox div.clm p.mini{
+    margin-left: 5px;
+}
+label.mini.row.ctr{
+    text-transform: uppercase;
 }

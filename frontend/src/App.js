@@ -5,6 +5,7 @@ import HomeView from './views/home/view.js';
 import SignInView from './views/auth/view.js';
 import ProfileView from './views/profile/view.js';
 import MainView from './views/main/view.js';
+import SearchView from './views/search/view.js';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route exact path='/' element={<HomeView />} />
           <Route exact path='/signin' element={<SignInView />} />
           <Route exact path='/main' element={<MainView />} />
+          <Route exact path='/search' element={<SearchView />} />
           <Route exact path='/profile' element={<ProfileView />} />
           <Route path='*' status="404" element={<E404View />} />
         </Routes>
