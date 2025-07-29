@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Header from "../../components/header/comp";
 import Footer from "../../components/footer/comp";
 import { useAppContext } from "../../Application";
-import TreeMapChart from "../../components/alldirectories/comp";
 
 export default function MainView() {
     const { setTitle } = useAppContext();
@@ -24,9 +23,6 @@ export default function MainView() {
                             <span>Обновить данные</span>
                         </button>
                     </div>
-                </div>
-                <div className="panel">
-                    <TreeMapChart />
                 </div>
                 <h2>Управление</h2>
                 <div className="grid">
