@@ -74,11 +74,11 @@ const createNsiHandler = (config) => async (req, res) => {
 router.get('/search', createNsiHandler({
   endpoint: '/searchDictionary',
   allowedParams: [
-    'identifier', 'page', 'sorting', 'sortingDirection', 'showArchive',
+    'identifier', 'sorting', 'sortingDirection', 'showArchive',
     'publishDateFrom', 'publishDateTo', 'name', 'description', 'law',
     'respOrganizationId', 'typeId', 'groupId'
   ],
-  fixedParams: { size: 10 },
+  fixedParams: { page: 1, size: 1000 },
   message: 'Результаты поиска',
   transformResponse: (data) => ({
     total: data.total,

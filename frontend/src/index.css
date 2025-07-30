@@ -191,3 +191,36 @@ button.red{
 label.mini.row.ctr{
     text-transform: uppercase;
 }
+.pagination{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.outpanel{
+    border: #c0c0c0 2px solid;
+    font-weight: 700;
+    color: #c0c0c0;
+    display: flex;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+.searchitem{
+    display: flex;
+    justify-content: space-between;
+}
+p.max4{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.searchbox{
+    z-index: 300;
+}
+.archive{
+    background-color: gold;
+    padding: 4px;
+    font-size: 0.7rem;
+}
