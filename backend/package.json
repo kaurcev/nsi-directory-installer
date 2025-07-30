@@ -1,7 +1,7 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
+  "name": "nsi-directory-installer-backend",
+  "version": "0.0.1",
+  "description": "Серверная часть nsi-directory-installer",
   "scripts": {
     "dev": "nodemon server.js ",
     "start": "node server.js"

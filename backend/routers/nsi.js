@@ -173,6 +173,7 @@ router.get('/compare', createNsiHandler({
   })
 }));
 
+
 const resourceHandlers = [
   { path: '/groups', name: 'Группы', endpoint: '/groups' },
   { path: '/types', name: 'Типы', endpoint: '/types' },

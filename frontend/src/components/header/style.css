@@ -1,46 +1,46 @@
 header {
-    padding: 8px 20px;
-    background-color: var(--akcent);
-    color: var(--bg-pan);
-    position: sticky;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    box-shadow: var(--sdw);
-    z-index: 1000;
+  padding: 8px 20px;
+  background-color: var(--akcent);
+  color: var(--bg-pan);
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  box-shadow: var(--sdw);
+  z-index: 1000;
 }
 
 header .header {
-    width: 100%;
-    max-width: 1900px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
+  width: 100%;
+  max-width: 1900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 header .header a,
 header .header span {
-    color: var(--bg-pan);
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 10px;
-    color: #ffffff80;
+  color: var(--bg-pan);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  color: #ffffff80;
 }
 
 header .header .logo {
-    max-height: 40px;
+  max-height: 40px;
 }
 
 header .header span:hover,
 header .header a:hover {
-   color: #ffffff;
+  color: #ffffff;
 }
 
 .system-name {

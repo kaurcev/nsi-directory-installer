@@ -2,7 +2,7 @@ import { useAppContext } from '../../Application';
 import './style.css';
 
 const SignInForm = () => {
-    const {version, versionstate, org} = useAppContext();
+    const { version, versionstate, org } = useAppContext();
     return (
         <form className='SignInForm'>
             <div className='cont btw'>
@@ -13,17 +13,17 @@ const SignInForm = () => {
                 <h4 className='nomarg'>Аутентификация в системе</h4>
                 <div className='rowf'>
                     <label className='mini'>Учетная запись</label>
-                    <input 
-                        placeholder='Введите имя пользователя' 
+                    <input
+                        placeholder='Введите имя пользователя'
                         aria-label="Поле ввода учетной записи"
                     />
                 </div>
                 <div className='rowf'>
                     <label className='mini'>Пароль</label>
-                    <input 
+                    <input
                         type="password"
                         placeholder='Введите пароль'
-                        aria-label="Поле ввода пароля" 
+                        aria-label="Поле ввода пароля"
                     />
                 </div>
                 <button type="submit">

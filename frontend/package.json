@@ -1,5 +1,6 @@
 {
-  "name": "frontend",
+  "name": "nsi-directory-installer-frontend",
+  "description": "Клиентская часть nsi-directory-installer",
   "org": "\"Наименование организации\"",
   "version": "0.0.1",
   "versionstate": "DEVELOPMENT",
@@ -19,7 +20,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "GENERATE_SOURCEMAP=false && react-scripts start",
+    "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

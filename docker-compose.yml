@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   frontend:
-    container_name: nsi-frontend
+    container_name: nsi-directory-installer-frontend
     build:
       context: ./frontend
     ports:
@@ -16,7 +16,7 @@ services:
     command: npm start
 
   backend:
-    container_name: nsi-backend
+    container_name: nsi-directory-installer-backend
     build:
       context: ./backend
     environment:
@@ -35,7 +35,7 @@ services:
     command: npm run dev
 
   db:
-    container_name: nsi-database
+    container_name: nsi-directory-installer-database
     image: postgres:15-alpine
     environment:
       POSTGRES_DB: mydb

@@ -1,5 +1,5 @@
-import { useAppContext } from '../../Application';
 import { Link } from "react-router-dom";
+import { useAppContext } from '../../Application';
 import './style.css';
 
 const Footer = () => {
