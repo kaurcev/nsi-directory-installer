@@ -7,10 +7,11 @@
 }
 
 @keyframes fadeIn {
-    0%{
+    0% {
         opacity: 0.2;
     }
-    100%{
+
+    100% {
         opacity: 1;
     }
 }
@@ -20,7 +21,7 @@
     font-family: "Golos-Text_Regular", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, opacity 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, opacity 0.1s ease-in-out, height 0.1s ease-in-out;
 }
 
 :root {
@@ -51,16 +52,17 @@ main {
     gap: 10px;
 }
 
-main *{
+main * {
     animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 a {
     text-decoration: none;
+    color: var(--akcent);
 }
 
 
-.panel{
+.panel {
     background-color: var(--bg-pan);
     padding: 10px;
     box-shadow: var(--sdw);
@@ -79,16 +81,19 @@ a {
     flex-direction: column;
 }
 
-.row{
+.row {
     display: flex;
     flex-direction: row;
 }
 
-.gap{
+.gap {
     gap: 10px;
 }
+.gapmin {
+    gap: 5px;
+}
 
-.grid{
+.grid {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -97,7 +102,7 @@ a {
     gap: 10px;
 }
 
-.grid .panel{
+.grid .panel {
     flex-basis: 400px;
     flex-grow: 1;
     min-height: 10vh;
@@ -129,21 +134,23 @@ a {
     text-align: right;
 }
 
-.rightf{
+.rightf {
     display: flex;
     flex-direction: row;
     justify-content: end;
 }
 
-.nomarg{
+.nomarg {
     margin: 0px;
 }
 
-.btw{
+.btw {
     justify-content: space-between;
 }
 
-input, select, textarea{
+input,
+select,
+textarea {
     background-color: var(--bg);
     padding: 6px 8px;
     border: 2px solid var(--bg);
@@ -151,7 +158,7 @@ input, select, textarea{
     font-size: 0.9rem;
 }
 
-button{
+button {
     background-color: var(--akcent);
     padding: 6px 8px;
     border: 2px solid var(--akcent);
@@ -165,38 +172,45 @@ button{
     font-size: 0.9rem;
 }
 
-button.red{
+button.red {
     background-color: var(--red);
     border: 2px solid var(--red);
 }
 
-.end{
+.end {
     display: flex;
     justify-content: end;
 }
 
-.searchbox div.clm{
+.searchbox div.clm {
     flex-grow: 1;
     flex-basis: 300px;
 }
-.searchbox div.clm input, .searchbox div.clm textarea{
+
+.searchbox div.clm input,
+.searchbox div.clm textarea {
     width: 100%;
 }
-.searchbox div.clm textarea{    
+
+.searchbox div.clm textarea {
     resize: none;
 }
-.searchbox div.clm p.mini{
+
+.searchbox div.clm p.mini {
     margin-left: 5px;
 }
-label.mini.row.ctr{
+
+label.mini.row.ctr {
     text-transform: uppercase;
 }
-.pagination{
+
+.pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.outpanel{
+
+.outpanel {
     border: #c0c0c0 2px solid;
     font-weight: 700;
     color: #c0c0c0;
@@ -205,22 +219,72 @@ label.mini.row.ctr{
     border-radius: 8px;
     font-size: 0.8rem;
 }
-.searchitem{
+
+.searchitem {
     display: flex;
     justify-content: space-between;
 }
-p.max4{
+
+p.max4 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.searchbox{
+
+.searchbox {
     z-index: 300;
 }
-.archive{
+
+.archive {
     background-color: gold;
     padding: 4px;
     font-size: 0.7rem;
+}
+
+.algctr {
+    align-items: center;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.max60 {
+    flex-grow: 3;
+    flex-basis: 60%;
+}
+
+.rightBar {
+    flex-grow: 1;
+    flex-basis: 20%;
+    position: sticky;
+    top: 65px;
+    right: 0px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.structureNotes {
+    background-color: var(--bg);
+    color: var(--akcent-disabled);
+    padding: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.structureNotes.hide {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: fit-content;
+    max-height: 75px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0));
 }

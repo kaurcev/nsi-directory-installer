@@ -13,7 +13,7 @@ const Header = () => {
                             <img src={logo} className='logo' alt='Логотип системы' />
                             <span>Платформа репликации НСИ</span>
                         </Link>
-                        <Link target="_blank" to="https://nsi.rosminzdrav.ru/dictionaries">Реестр справочников</Link>
+                        <span onClick={() => navigate("/search")}>Реестр справочников</span>
                         <Link target="_blank" to="https://nsi.rosminzdrav.ru/oid">Реестр OID</Link>
                     </div>
                     <div className='row gap'>

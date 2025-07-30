@@ -5,11 +5,12 @@ import { useAppContext } from "../../Application";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ru from "date-fns/locale/ru";
+import { Link } from "react-router-dom";
 
 registerLocale("ru", ru);
 
 export default function SearchView() {
-    const { setTitle } = useAppContext();
+    const { setTitle, navigate } = useAppContext();
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
@@ -292,31 +293,47 @@ export default function SearchView() {
 
                     {!loading && currentResults.length > 0 ? (
                         <>
-                            <div className="clm gap">
-                                {currentResults.map((item) => (
-                                    <div className="panel searchitem clm" key={item.id}>
-                                        <div className="row gap">
-                                            <p className="mini nomarg">{item.oid}</p>
-                                            <p className="mini nomarg">{item.version}</p>
-                                            <p className="mini nomarg">Создан: <b>{item.createDate}</b></p>
-                                            <p className="mini nomarg">Опубликован: <b>{item.publishDate}</b></p>
-                                            <p className="mini nomarg">Изменён: <b>{item.lastUpdate}</b></p>
+                            <div className="row gap btw">
+                                <div className="max60 clm gap">
+                                    {currentResults.map((item) => (
+                                        <div className="panel searchitem clm" key={item.id}>
+                                            <div className="row gap">
+                                                <p className="mini nomarg">OID: <b>{item.oid}</b></p>
+                                                <p className="mini nomarg">Версия: <b>{item.version}</b></p>
+                                                <p className="mini nomarg">Создан: <b>{item.createDate}</b></p>
+                                                <p className="mini nomarg">Опубликован: <b>{item.publishDate}</b></p>
+                                                <p className="mini nomarg">Изменён: <b>{item.lastUpdate}</b></p>
+                                            </div>
+                                            <div className="clm">
+                                                <p className="mini">Наименование</p>
+                                                <p className="nomarg row ctr gap">
+                                                    {item.archive ? (<><span className="archive">Справочник в архиве</span></>) : null}{item.shortName}
+                                                </p>
+                                            </div>
+                                            <div className="clm">
+                                                <p className="mini">Описание</p>
+                                                <p className="nomarg max4">{item.description || "Описание не предоставлено."}</p>
+                                            </div>
+                                            <div className="row btw">
+                                                <div className="row gap">
+                                                    <button>Копировать наименование</button>
+                                                    <button>Копировать OID</button>
+                                                </div>
+                                                <button onClick={() => navigate(`/passport/${item.oid}/${item.version}`)}>Подробнее</button>
+                                            </div>
                                         </div>
-                                        <div className="clm">
-                                            <p className="mini">Наименование</p>
-                                            <p className="nomarg row ctr gap">
-                                                {item.archive ? (<><span className="archive">Справочник в архиве</span></>) : null}{item.shortName}
-                                            </p>
-                                        </div>
-                                        <div className="clm">
-                                            <p className="mini">Описание</p>
-                                            <p className="nomarg max4">{item.description || "Описание не предоставлено."}</p>
-                                        </div>
-                                        <div className="row right end">
-                                            <button>Подробнее</button>
-                                        </div>
+                                    ))}
+                                </div>
+                                <div className="rightBar">
+                                    <div className="panel">
+                                        <h4 className="nomarg">Информация</h4>
+                                        <p>Найдите необходимый справочник, ознакомтесь с описанием и настройте репликацию</p>
                                     </div>
-                                ))}
+                                    <div className="panel mini">
+                                        <h4 className="nomarg row gapmin algctr"><i className="fa fa-exclamation-triangle" aria-hidden="true"></i><span>ВАЖНО</span></h4>
+                                        <p>Система находится в разработке, поэтому при обнаружении багов пишите в <Link to="https://github.com/kaurcev/nsi-directory-installer/issues" target="_blank">issues</Link> репозитория!</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="pagination row btw">

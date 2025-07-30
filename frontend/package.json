@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "org": "БУЗОО \"Медицинский информационно-аналитический центр\"",
+  "org": "\"Наименование организации\"",
   "version": "0.0.1",
   "versionstate": "DEVELOPMENT",
   "proxy": "http://localhost:3001",
