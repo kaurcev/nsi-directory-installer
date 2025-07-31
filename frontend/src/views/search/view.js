@@ -108,7 +108,7 @@ export default function SearchView() {
             const data = await response.json();
 
             if (!data.status) throw new Error(data.message || "Ошибка сервера");
-            
+
             setAllResults(data.data || []);
             setTotalItems(data.total);
             addNotification(data.message);
@@ -123,7 +123,6 @@ export default function SearchView() {
         formatDate, addNotification
     ]);
 
-    // Обработчик отправки формы
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
         handleSearch();
@@ -141,7 +140,7 @@ export default function SearchView() {
             setCurrentPage(Math.max(1, Math.min(pageNum, totalPages)));
         }
     }, [totalPages]);
-    
+
     const renderSkeletons = useMemo(() => (
         Array.from({ length: 3 }).map((_, idx) => (
             <div className="panel searchitem clm" key={`skeleton-${idx}`}>
@@ -175,7 +174,7 @@ export default function SearchView() {
 
     const renderResults = useMemo(() => {
         if (loading) return renderSkeletons;
-        
+
         if (currentResults.length > 0) {
             return currentResults.map((item) => (
                 <div className="panel searchitem clm" key={`${item.oid}-${item.version}`}>
@@ -209,7 +208,7 @@ export default function SearchView() {
                 </div>
             ));
         }
-        
+
         return !loading && allResults.length === 0 && <div className="empty">Нет результатов</div>;
     }, [loading, currentResults, allResults.length, renderSkeletons, navigate]);
 
@@ -264,7 +263,7 @@ export default function SearchView() {
                     <i className="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     <span>ВАЖНО</span>
                 </h4>
-                <p>Система находится в разработке, поэтому при обнаружении багов пишите в 
+                <p>Система находится в разработке, поэтому при обнаружении багов пишите в
                     <Link to="https://github.com/kaurcev/nsi-directory-installer/issues" target="_blank"> issues</Link> репозитория!
                 </p>
             </div>
@@ -411,7 +410,7 @@ export default function SearchView() {
                         <p>Показаны первые {MAX_RESULTS} справочников из {totalItems}. Для просмотра всех результатов уточните критерии поиска.</p>
                     </div>
                 )}
-                
+
                 <div className="row gap btw">
                     <div className="max60 clm gap">
                         {renderResults}
