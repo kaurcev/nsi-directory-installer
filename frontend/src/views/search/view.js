@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Header from "../../components/header/comp";
 import Footer from "../../components/footer/comp";
 import { useAppContext } from "../../Application";
@@ -9,8 +9,11 @@ import { Link } from "react-router-dom";
 
 registerLocale("ru", ru);
 
+const ITEMS_PER_PAGE = 10;
+const MAX_RESULTS = 1000;
+
 export default function SearchView() {
-    const { setTitle, navigate } = useAppContext();
+    const { setTitle, navigate, addNotification } = useAppContext();
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
@@ -28,21 +31,26 @@ export default function SearchView() {
 
     const [allResults, setAllResults] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [totalItems, setTotalItems] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
 
-    const totalPages = useMemo(() => {
-        return Math.ceil(allResults.length / itemsPerPage);
-    }, [allResults.length]);
+    const totalPages = useMemo(() => (
+        Math.ceil(allResults.length / ITEMS_PER_PAGE)
+    ), [allResults.length]);
 
     const currentResults = useMemo(() => {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        return allResults.slice(startIndex, endIndex);
-    }, [allResults, currentPage, itemsPerPage]);
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return allResults.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [allResults, currentPage]);
+
+    const formatDate = useCallback((date) => {
+        if (!date) return "";
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+    }, []);
 
     useEffect(() => {
         setTitle("Поиск");
@@ -54,36 +62,29 @@ export default function SearchView() {
                     fetch("/nsi/groups")
                 ]);
 
-                const typesData = await typesRes.json();
-                const groupsData = await groupsRes.json();
+                const [typesData, groupsData] = await Promise.all([
+                    typesRes.json(),
+                    groupsRes.json()
+                ]);
 
                 if (typesData.status) setTypes(typesData.data);
                 if (groupsData.status) setGroups(groupsData.data);
             } catch (err) {
-                console.error("Ошибка загрузки данных:", err);
+                addNotification(`Ошибка загрузки данных: ${err.message}`);
             }
         };
 
         fetchTypesAndGroups();
-    }, [setTitle]);
+    }, [setTitle, addNotification]);
 
-    const formatDate = (date) => {
-        if (!date) return "";
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0");
-        const year = date.getFullYear();
-        return `${day}.${month}.${year}`;
-    };
-
-    const handleSearch = async () => {
+    const handleSearch = useCallback(async () => {
         setLoading(true);
-        setError(null);
         setAllResults([]);
         setCurrentPage(1);
 
         try {
             const params = new URLSearchParams({
-                size: 1000,
+                size: MAX_RESULTS,
                 showArchive: showArchive.toString(),
             });
 
@@ -107,43 +108,168 @@ export default function SearchView() {
             const data = await response.json();
 
             if (!data.status) throw new Error(data.message || "Ошибка сервера");
-
+            
             setAllResults(data.data || []);
             setTotalItems(data.total);
+            addNotification(data.message);
         } catch (err) {
-            setError(err.message);
+            addNotification(err.message);
         } finally {
             setLoading(false);
         }
-    };
+    }, [
+        searchType, query, showArchive, isAdvanced, sorting,
+        typeId, groupId, descriptionQuery, startDate, endDate,
+        formatDate, addNotification
+    ]);
 
-    const handleSubmit = (e) => {
+    // Обработчик отправки формы
+    const handleSubmit = useCallback((e) => {
         e.preventDefault();
         handleSearch();
-    };
+    }, [handleSearch]);
 
-    const goToPage = (page) => {
-
+    const goToPage = useCallback((page) => {
         const newPage = Math.max(1, Math.min(page, totalPages));
         setCurrentPage(newPage);
-    };
+    }, [totalPages]);
 
-    const handlePageInputChange = (e) => {
+    const handlePageInputChange = useCallback((e) => {
         const value = e.target.value;
-
         if (value === "" || /^\d+$/.test(value)) {
             const pageNum = value === "" ? 1 : parseInt(value, 10);
-
-            if (pageNum >= 1 && pageNum <= totalPages) {
-                setCurrentPage(pageNum);
-            }
-            else if (pageNum > totalPages) {
-                setCurrentPage(totalPages);
-            } else if (pageNum < 1) {
-                setCurrentPage(1);
-            }
+            setCurrentPage(Math.max(1, Math.min(pageNum, totalPages)));
         }
-    };
+    }, [totalPages]);
+    
+    const renderSkeletons = useMemo(() => (
+        Array.from({ length: 3 }).map((_, idx) => (
+            <div className="panel searchitem clm" key={`skeleton-${idx}`}>
+                <div className="row gap">
+                    <p className="loading mini nomarg">OID: <b>Загрузка</b></p>
+                    <p className="loading mini nomarg">Версия: <b>Загрузка</b></p>
+                    <p className="loading mini nomarg">Создан: <b>Загрузка</b></p>
+                    <p className="loading mini nomarg">Опубликован: <b>Загрузка</b></p>
+                    <p className="loading mini nomarg">Изменён: <b>Загрузка</b></p>
+                </div>
+                <div className="clm">
+                    <p className="loading mini">Наименование</p>
+                    <p className="loading nomarg row ctr gap">
+                        Загрузка
+                    </p>
+                </div>
+                <div className="clm">
+                    <p className="loading mini">Описание</p>
+                    <p className="loading nomarg max4">Загрузка</p>
+                </div>
+                <div className="row btw">
+                    <div className="row gap">
+                        <button className="loading">Копировать наименование</button>
+                        <button className="loading">Копировать OID</button>
+                    </div>
+                    <button className="loading">Подробнее</button>
+                </div>
+            </div>
+        ))
+    ), []);
+
+    const renderResults = useMemo(() => {
+        if (loading) return renderSkeletons;
+        
+        if (currentResults.length > 0) {
+            return currentResults.map((item) => (
+                <div className="panel searchitem clm" key={`${item.oid}-${item.version}`}>
+                    <div className="row gap">
+                        <p className="mini nomarg">OID: <b>{item.oid}</b></p>
+                        <p className="mini nomarg">Версия: <b>{item.version}</b></p>
+                        <p className="mini nomarg">Создан: <b>{item.createDate}</b></p>
+                        <p className="mini nomarg">Опубликован: <b>{item.publishDate}</b></p>
+                        <p className="mini nomarg">Изменён: <b>{item.lastUpdate}</b></p>
+                    </div>
+                    <div className="clm">
+                        <p className="mini">Наименование</p>
+                        <p className="nomarg row ctr gap">
+                            {item.archive && <span className="archive">АРХИВНЫЙ СПРАВОЧНИК</span>}
+                            {item.shortName}
+                        </p>
+                    </div>
+                    <div className="clm">
+                        <p className="mini">Описание</p>
+                        <p className="nomarg max4">{item.description || "Описание не предоставлено."}</p>
+                    </div>
+                    <div className="row btw">
+                        <div className="row gap">
+                            <button>Копировать наименование</button>
+                            <button>Копировать OID</button>
+                        </div>
+                        <button onClick={() => navigate(`/passport/${item.oid}/${item.version}`)}>
+                            Подробнее
+                        </button>
+                    </div>
+                </div>
+            ));
+        }
+        
+        return !loading && allResults.length === 0 && <div className="empty">Нет результатов</div>;
+    }, [loading, currentResults, allResults.length, renderSkeletons, navigate]);
+
+    const renderPagination = useMemo(() => {
+        if (totalPages <= 1 || loading) return null;
+
+        return (
+            <div className="pagination row btw">
+                <div className="panel row center gap">
+                    <button
+                        className="pagination-button"
+                        onClick={() => goToPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Назад
+                    </button>
+
+                    <div className="row center gap">
+                        <input
+                            type="number"
+                            className="page-input"
+                            value={currentPage}
+                            onChange={handlePageInputChange}
+                            min="1"
+                            max={totalPages}
+                        />
+                    </div>
+
+                    <button
+                        className="pagination-button"
+                        onClick={() => goToPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Вперед
+                    </button>
+                </div>
+                <div className="outpanel">
+                    Страница {currentPage} из {totalPages}
+                </div>
+            </div>
+        );
+    }, [currentPage, totalPages, loading, goToPage, handlePageInputChange]);
+
+    const rightPanel = useMemo(() => (
+        <div className="rightBar">
+            <div className="panel">
+                <h4 className="nomarg">Информация</h4>
+                <p>Найдите необходимый справочник, ознакомтесь с описанием и настройте репликацию</p>
+            </div>
+            <div className="panel mini">
+                <h4 className="nomarg row gapmin algctr">
+                    <i className="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span>ВАЖНО</span>
+                </h4>
+                <p>Система находится в разработке, поэтому при обнаружении багов пишите в 
+                    <Link to="https://github.com/kaurcev/nsi-directory-installer/issues" target="_blank"> issues</Link> репозитория!
+                </p>
+            </div>
+        </div>
+    ), []);
 
     return (
         <>
@@ -280,100 +406,18 @@ export default function SearchView() {
                     )}
                 </form>
 
-                <div className="clm gap">
-                    {error && <div className="error">{error}</div>}
-
-                    {loading && <div className="panel loading">Загрузка данных...</div>}
-
-                    {!loading && totalItems > 1000 && (
-                        <div className="panel info">
-                            <p>Показаны первые 1000 справочников из {totalItems}. Для просмотра всех результатов уточните критерии поиска.</p>
-                        </div>
-                    )}
-
-                    {!loading && currentResults.length > 0 ? (
-                        <>
-                            <div className="row gap btw">
-                                <div className="max60 clm gap">
-                                    {currentResults.map((item) => (
-                                        <div className="panel searchitem clm" key={item.id}>
-                                            <div className="row gap">
-                                                <p className="mini nomarg">OID: <b>{item.oid}</b></p>
-                                                <p className="mini nomarg">Версия: <b>{item.version}</b></p>
-                                                <p className="mini nomarg">Создан: <b>{item.createDate}</b></p>
-                                                <p className="mini nomarg">Опубликован: <b>{item.publishDate}</b></p>
-                                                <p className="mini nomarg">Изменён: <b>{item.lastUpdate}</b></p>
-                                            </div>
-                                            <div className="clm">
-                                                <p className="mini">Наименование</p>
-                                                <p className="nomarg row ctr gap">
-                                                    {item.archive ? (<><span className="archive">Справочник в архиве</span></>) : null}{item.shortName}
-                                                </p>
-                                            </div>
-                                            <div className="clm">
-                                                <p className="mini">Описание</p>
-                                                <p className="nomarg max4">{item.description || "Описание не предоставлено."}</p>
-                                            </div>
-                                            <div className="row btw">
-                                                <div className="row gap">
-                                                    <button>Копировать наименование</button>
-                                                    <button>Копировать OID</button>
-                                                </div>
-                                                <button onClick={() => navigate(`/passport/${item.oid}/${item.version}`)}>Подробнее</button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="rightBar">
-                                    <div className="panel">
-                                        <h4 className="nomarg">Информация</h4>
-                                        <p>Найдите необходимый справочник, ознакомтесь с описанием и настройте репликацию</p>
-                                    </div>
-                                    <div className="panel mini">
-                                        <h4 className="nomarg row gapmin algctr"><i className="fa fa-exclamation-triangle" aria-hidden="true"></i><span>ВАЖНО</span></h4>
-                                        <p>Система находится в разработке, поэтому при обнаружении багов пишите в <Link to="https://github.com/kaurcev/nsi-directory-installer/issues" target="_blank">issues</Link> репозитория!</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="pagination row btw">
-                                <div className="panel row center gap">
-                                    <button
-                                        className="pagination-button"
-                                        onClick={() => goToPage(currentPage - 1)}
-                                        disabled={currentPage === 1}
-                                    >
-                                        Назад
-                                    </button>
-
-                                    <div className="row center gap">
-                                        <input
-                                            type="number"
-                                            className="page-input"
-                                            value={currentPage}
-                                            onChange={handlePageInputChange}
-                                            min="1"
-                                            max={totalPages}
-                                            disabled={totalPages <= 1}
-                                        />
-                                    </div>
-
-                                    <button
-                                        className="pagination-button"
-                                        onClick={() => goToPage(currentPage + 1)}
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        Вперед
-                                    </button>
-                                </div>
-                                <div className="outpanel">
-                                    Страница {currentPage} из {totalPages}
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        !loading && allResults.length === 0 && <div className="empty">Нет результатов</div>
-                    )}
+                {!loading && totalItems > MAX_RESULTS && (
+                    <div className="panel info">
+                        <p>Показаны первые {MAX_RESULTS} справочников из {totalItems}. Для просмотра всех результатов уточните критерии поиска.</p>
+                    </div>
+                )}
+                
+                <div className="row gap btw">
+                    <div className="max60 clm gap">
+                        {renderResults}
+                        {renderPagination}
+                    </div>
+                    {rightPanel}
                 </div>
             </main>
             <Footer />

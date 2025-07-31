@@ -1,43 +1,76 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Header from "../../components/header/comp";
 import Footer from "../../components/footer/comp";
 import { useAppContext } from "../../Application";
 import { useParams } from "react-router-dom";
 
+const SkeletonText = ({ lines = 1 }) => (
+    <div className="clm gap">
+        {Array.from({ length: lines }).map((_, i) => (
+            <p key={i} className="loading nomarg">Загрузка...</p>
+        ))}
+    </div>
+);
+
+const StructureNotes = ({ loading, data, hidden, onToggle }) => {
+    if (loading) {
+        return (
+            <div className="clm gap">
+                <SkeletonText lines={3} />
+                <button className="small loading">Загрузка</button>
+            </div>
+        );
+    }
+
+    if (!data) return <p>Нет данных для отображения</p>;
+
+    return (
+        <>
+            <pre className={`nomarg structureNotes ${hidden ? "hide" : ""}`}>
+                {data.structureNotes || "Описание не предоставлено"}
+            </pre>
+            <button onClick={onToggle} className="small">
+                {hidden ? "Показать" : "Скрыть"}
+            </button>
+        </>
+    );
+};
+
 export default function PassportView() {
-    const { setTitle, navigate } = useAppContext();
+    const { setTitle, navigate, addNotification } = useAppContext();
     const { oid, version } = useParams();
-    const [hide, setHide] = useState(true); // Начальное состояние - скрыто
+    const [hide, setHide] = useState(true);
     const [passportLoading, setPassportLoading] = useState(false);
     const [versionsLoading, setVersionsLoading] = useState(false);
     const [versions, setVersions] = useState([]);
     const [passportData, setPassportData] = useState(null);
 
-    // Переключение видимости структурного описания
-    const toggleStructureNotes = () => {
+    const toggleStructureNotes = useCallback(() => {
         setHide(prev => !prev);
-    };
+    }, []);
 
     useEffect(() => {
+        setTitle("Паспорт справочника");
+
         const fetchVersions = async () => {
             try {
                 setVersionsLoading(true);
                 const response = await fetch(`/nsi/versions?identifier=${oid}`);
                 if (!response.ok) throw new Error('Ошибка сети');
                 const { data } = await response.json();
+                addNotification(data.message);
                 setVersions(data);
             } catch (error) {
-                console.error("Ошибка при загрузке версий:", error);
+                addNotification(error.message)
             } finally {
                 setVersionsLoading(false);
             }
         };
 
-        setTitle("Паспорт справочника");
         fetchVersions();
+        // eslint-disable-next-line
     }, [setTitle, oid]);
 
-    // Загрузка данных паспорта
     useEffect(() => {
         const fetchPassport = async () => {
             if (!version) return;
@@ -49,7 +82,7 @@ export default function PassportView() {
                 const { data } = await response.json();
                 setPassportData(data);
             } catch (error) {
-                console.error("Ошибка при загрузке паспорта:", error);
+                addNotification(error.message)
                 setPassportData(null);
             } finally {
                 setPassportLoading(false);
@@ -57,21 +90,39 @@ export default function PassportView() {
         };
 
         fetchPassport();
+        // eslint-disable-next-line
     }, [oid, version]);
 
-    const versionsOptions = useMemo(() => {
-        return versions.map((item) => (
+    const handleVersionChange = useCallback((e) => {
+        const newVersion = e.target.value;
+        navigate(`/passport/${oid}/${newVersion}`);
+    }, [navigate, oid]);
+
+    const versionsOptions = useMemo(() => (
+        versions.map((item) => (
             <option key={item.version} value={item.version}>
                 Версия {item.version} от {item.publishDate || ''}
             </option>
-        ));
-    }, [versions]);
+        ))
+    ), [versions]);
 
     const headerInfo = useMemo(() => {
-        if (passportLoading || versionsLoading) {
-            return <div>Загрузка...</div>;
+        if (passportLoading) {
+            return (
+                <div className="clm">
+                    <h4 className="nomarg loading">Загрузка...</h4>
+                    <div className="row gap">
+                        {Array(5).fill().map((_, i) => (
+                            <p key={i} className="mini nomarg loading">Загрузка...</p>
+                        ))}
+                    </div>
+                </div>
+            );
         }
-        return passportData ? (
+
+        if (!passportData) return <p>Данные не найдены</p>;
+
+        return (
             <>
                 <h4 className="nomarg">{passportData.shortName}</h4>
                 <div className="row gap">
@@ -82,64 +133,36 @@ export default function PassportView() {
                     <p className="mini nomarg">Изменён: <b>{passportData.lastUpdate}</b></p>
                 </div>
             </>
-        ) : (
-            <p>Данные не найдены</p>
         );
-    }, [passportLoading, versionsLoading, passportData]);
+    }, [passportLoading, passportData]);
 
     const descriptionBlock = useMemo(() => {
-        if (passportLoading || versionsLoading) {
-            return <p>Загрузка описания...</p>;
+        if (passportLoading) {
+            return <SkeletonText lines={3} />;
         }
-        return passportData ? (
+
+        if (!passportData) return <p>Нет данных для отображения</p>;
+
+        return (
             <pre className="nomarg">
                 {passportData.description || "Описание не предоставлено"}
             </pre>
-        ) : (
-            <p>Нет данных для отображения</p>
         );
-    }, [passportLoading, versionsLoading, passportData]);
-
-    // Добавлен класс 'hide' в зависимости от состояния
-    const structureNotesBlock = useMemo(() => {
-        if (passportLoading || versionsLoading) {
-            return <p>Загрузка описания...</p>;
-        }
-        return passportData ? (
-            <>
-                <pre className={`nomarg structureNotes ${hide ? "hide" : ""}`}>
-                    {passportData.structureNotes || "Описание не предоставлено"}
-                </pre>
-                <button
-                    onClick={toggleStructureNotes}
-                    className="small"
-                >
-                    {hide ? "Показать" : "Скрыть"}
-                </button>
-            </>
-
-        ) : (
-            <p>Нет данных для отображения</p>
-        );
-    }, [passportLoading, versionsLoading, passportData, hide]); // Добавлена зависимость от hide
+    }, [passportLoading, passportData]);
 
     const releaseNotesBlock = useMemo(() => {
-        if (passportLoading || versionsLoading) {
-            return <p>Загрузка описания...</p>;
+        if (passportLoading) {
+            return <SkeletonText lines={1} />;
         }
-        return passportData ? (
+
+        if (!passportData) return <p>Нет данных для отображения</p>;
+
+        return (
             <pre className="nomarg">
                 {passportData.releaseNotes || "Заметок нет"}
             </pre>
-        ) : (
-            <p>Нет данных для отображения</p>
         );
-    }, [passportLoading, versionsLoading, passportData]);
-
-    const handleVersionChange = (e) => {
-        const newVersion = e.target.value;
-        navigate(`/passport/${oid}/${newVersion}`);
-    };
+    }, [passportLoading, passportData]);
 
     return (
         <>
@@ -165,14 +188,19 @@ export default function PassportView() {
                             <div className="row algctr gap">
                                 <p className="mini">Структурное описание</p>
                             </div>
-                            {structureNotesBlock}
+                            <StructureNotes
+                                loading={passportLoading}
+                                data={passportData}
+                                hidden={hide}
+                                onToggle={toggleStructureNotes}
+                            />
                         </div>
                     </div>
                     <div className="rightBar clm gap">
                         <div className="clm">
                             <p className="mini nomarg">Версия справочника</p>
                             {versionsLoading ? (
-                                <p>Загрузка версий...</p>
+                                <SkeletonText lines={1} />
                             ) : (
                                 <select
                                     value={version}
