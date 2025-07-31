@@ -2,6 +2,13 @@
 
 > В процессе доработки. Как только появится релиз, только тогда будет рабочий функионал.
 
+![Static Badge](https://img.shields.io/badge/kaurcev.dev-kaurcev-kaurcev)
+![GitHub top language](https://img.shields.io/github/languages/top/kaurcev/nsi-directory-installer)
+![GitHub](https://img.shields.io/github/license/kaurcev/nsi-directory-installer)
+![GitHub Repo stars](https://img.shields.io/github/stars/kaurcev/nsi-directory-installer)
+![GitHub issues](https://img.shields.io/github/issues/kaurcev/nsi-directory-installer)
+
+
 Данное решение ориентировано на организации, занимающиеся экспортированием нормативно-справочной информации из [НСИ](https://nsi.rosminzdrav.ru)    
 
 Для упрощения собран разработки собран docker-compose, в котором вы можете ознакомиться с прозрачностью данного решения, а при наличии навыков самостоятельно собрать билд.     

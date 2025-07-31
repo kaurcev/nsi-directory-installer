@@ -1,9 +1,13 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const NodeCache = require('node-cache');
 
 const NSI_BASE_URL = 'https://nsi.rosminzdrav.ru/port/rest';
 const DEFAULT_TIMEOUT = 30000;
+const CACHE_DURATION = 20 * 60;
+
+const cache = new NodeCache({ stdTTL: CACHE_DURATION, checkperiod: 60 });
 
 const cleanHtmlContent = (html) => {
   if (!html) return null;
@@ -42,6 +46,13 @@ const createNsiHandler = (config) => async (req, res) => {
       }
     });
 
+    const cacheKey = `nsi:${endpoint}:${JSON.stringify(params)}`;
+
+    const cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      return res.status(cachedData.status).json(cachedData.body);
+    }
+
     const response = await axios.get(`${NSI_BASE_URL}${endpoint}`, {
       params,
       timeout: DEFAULT_TIMEOUT
@@ -53,11 +64,20 @@ const createNsiHandler = (config) => async (req, res) => {
       ? message(req)
       : message;
 
-    res.status(statusCode).json({
+    const result = {
       status: true,
       message: responseMessage,
       ...responseData
-    });
+    };
+
+    if (statusCode === 200) {
+      cache.set(cacheKey, {
+        status: statusCode,
+        body: result
+      });
+    }
+
+    res.status(statusCode).json(result);
 
   } catch (error) {
     const status = error.response?.status || 500;
@@ -172,7 +192,6 @@ router.get('/compare', createNsiHandler({
     data: data.data.list
   })
 }));
-
 
 const resourceHandlers = [
   { path: '/groups', name: 'Группы', endpoint: '/groups' },
